@@ -118,7 +118,7 @@ y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
 
 paint_step = tf.train.AdamOptimizer(1e-4).minimize(-y_conv[0])
 
-saver.restore(savepath)
+saver.restore(sess,savepath)
 
 for i in range(20000):
   if i%100 == 0:
