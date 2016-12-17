@@ -25,7 +25,7 @@ def max_pool_2x2(x):
                         strides=[1, 2, 2, 1], padding='SAME')
 
 x_image = tf.reshape(x, [-1,28,28,1])
-x_paints = bias_variable(tf.float32, shape=[28,28,1])
+x_paints = bias_variable([28,28,1])
 
 
 W_conv1 = weight_variable([5, 5, 1, 32])
