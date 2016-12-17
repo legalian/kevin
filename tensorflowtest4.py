@@ -25,7 +25,7 @@ def max_pool_2x2(x):
                         strides=[1, 2, 2, 1], padding='SAME')
 
 x_image = tf.reshape(x, [-1,28,28,1])
-x_paints = bias_variable([28,28,1])
+x_paints = bias_variable([1,28,28,1])
 
 
 W_conv1 = weight_variable([5, 5, 1, 32])
@@ -73,8 +73,14 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, y
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+paint_step = tf.train.AdamOptimizer(1e-4).minimize(-PAINT_4[0][0])
+
+
 sess.run(tf.global_variables_initializer())
-for i in range(10000):
+
+
+for i in range(5000):
   batch = mnist.train.next_batch(50)
   if i%100 == 0:
     train_accuracy = accuracy.eval(feed_dict={x:batch[0], y_: batch[1], keep_prob: 1.0})
@@ -83,12 +89,11 @@ for i in range(10000):
 
 print("test accuracy %g"%accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
-paint_step = tf.train.AdamOptimizer(1e-4).minimize(-PAINT_4[0])
 
 for i in range(20000):
   if i%100 == 0:
     paint_accuracy = PAINT_4.eval()
-    print("step %d, training accuracy %g"%(i, paint_accuracy[0]))
+    print("step %d, training accuracy %g"%(i, paint_accuracy[0][0]))
   paint_step.run()
 
 # savepath = saver.save(sess, 'trained-mnist')
